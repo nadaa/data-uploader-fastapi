@@ -1,0 +1,13 @@
+fastapi
+python-multipart
+uvicorn
+pydantic_settings
+psycopg[binary]
+sqlalchemy
+asyncpg
+obstore
+orjson
+pytest==8.3.2 
+pytest_asyncio 
+aiosqlite 
+httpx

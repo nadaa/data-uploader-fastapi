@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pass
+      POSTGRES_DB: DB
+    ports:
+      - "5000:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U db_user -d DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_HOSTNAME=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_PASSWORD=db_pass
+      - DATABASE_NAME=DB
+      - DATABASE_USERNAME=db_user
+      - UPLOAD_DIR=uploads
+      - DEFAULT_STORE_TYPE=local
+      - DATABASE_TEST_NAME=test_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+  
+volumes:
+  postgres-db:
